@@ -25,11 +25,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource(name = "userService")
     private UserDetailsService userDetailsService;
 
-    @Autowired
-    private PasswordEncoderConfig encoder;
+    private final PasswordEncoderConfig encoder;
+
+    private final UnauthorizedEntryPoint unauthorizedEntryPoint;
 
     @Autowired
-    private UnauthorizedEntryPoint unauthorizedEntryPoint;
+    public WebSecurityConfig(PasswordEncoderConfig encoder, UnauthorizedEntryPoint unauthorizedEntryPoint) {
+        this.encoder = encoder;
+        this.unauthorizedEntryPoint = unauthorizedEntryPoint;
+    }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -56,14 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private String[] getPermitAllUrls() {
         List<String> permitAllUrls = new ArrayList<>();
-//        permitAllUrls.add("/v3/api-docs/**");
-//        permitAllUrls.add("/swagger-ui/**");
-//        permitAllUrls.add("/swagger-ui.html");
         permitAllUrls.add("/admin/auth/authenticate");
-//        permitAllUrls.add("/auth/service/authenticate");
-//        permitAllUrls.add("/auth/register");
-//        permitAllUrls.add("/goods/random-goods");
-//        permitAllUrls.add("/auth/test");
         return permitAllUrls.toArray(new String[permitAllUrls.size()]);
     }
 

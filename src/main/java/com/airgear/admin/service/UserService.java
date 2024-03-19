@@ -1,10 +1,9 @@
 package com.airgear.admin.service;
 
-import com.airgear.admin.model.User;
+import com.airgear.admin.response.UserResponse;
 
 import java.util.List;
 
 public interface UserService {
-    User findByUsername(String username);
-    List<User> findAll();
+    List<UserResponse> findAll();
 }

@@ -37,17 +37,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         String header = req.getHeader(HEADER_STRING);
-        System.out.println("Header in filter + " + header);
         String username = null;
         String authToken = null;
 
         if (header != null && header.startsWith(TOKEN_PREFIX)) {
-            System.out.println("In first if");
             authToken = header.replace(TOKEN_PREFIX, "");
 
             try {
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
-                System.out.println("Username = " + username);
                 log.info("User name : {}", username);
             } catch (IllegalArgumentException e) {
                 log.error("Error occurred while retrieving Username from Token", e);
@@ -61,19 +58,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            System.out.println("Authen = " + SecurityContextHolder.getContext().getAuthentication());
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             if (jwtTokenUtil.validateToken(authToken, userDetails)) {
-                System.out.println("In validate = " + jwtTokenUtil.validateToken(authToken, userDetails) );
                 UsernamePasswordAuthenticationToken authentication = jwtTokenUtil.getAuthenticationToken(authToken, SecurityContextHolder.getContext().getAuthentication(), userDetails);
-                System.out.println("authentication = " + jwtTokenUtil.getAuthenticationToken(authToken, SecurityContextHolder.getContext().getAuthentication(), userDetails));
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
                 log.info("User authenticated: " + username + ", setting security context");
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
-        System.out.println("Before chain");
         chain.doFilter(req, res);
     }
 

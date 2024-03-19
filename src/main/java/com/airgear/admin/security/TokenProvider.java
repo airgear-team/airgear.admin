@@ -56,7 +56,6 @@ public class TokenProvider implements Serializable {
     }
 
     public String generateToken(Authentication authentication) {
-        System.out.println("In generate token = " + authentication.getName());
         log.info("authentication.getName : {}", authentication.getName());
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
