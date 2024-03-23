@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.OffsetDateTime;
 import java.util.Set;
 
 @Data
@@ -36,6 +37,10 @@ public class User {
     @Column
     private String name;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Goods> goods;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "USER_ROLES",
             joinColumns = {
@@ -44,4 +49,10 @@ public class User {
             inverseJoinColumns = {
                     @JoinColumn(name = "ROLE_ID")})
     private Set<Role> roles;
+
+    @Column(name = "created_at", nullable = false)
+    private OffsetDateTime createdAt;
+
+    @Column(name = "deleted_at")
+    private OffsetDateTime deleteAt;
 }
