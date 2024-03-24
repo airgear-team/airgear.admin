@@ -5,6 +5,7 @@ import com.airgear.admin.dto.CountDto;
 import com.airgear.admin.model.Category;
 import com.airgear.admin.repository.GoodsRepository;
 import com.airgear.admin.service.GoodsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,12 @@ import java.time.OffsetDateTime;
 @Service(value = "goodsService")
 public class GoodsServiceImpl implements GoodsService {
 
-    private GoodsRepository goodsRepository;
+    private final GoodsRepository goodsRepository;
+
+    @Autowired
+    public GoodsServiceImpl(GoodsRepository goodsRepository) {
+        this.goodsRepository = goodsRepository;
+    }
 
     @Override
     public CountDto getCountOfGoods() {
@@ -36,7 +42,7 @@ public class GoodsServiceImpl implements GoodsService {
 
         return category == null ?
                 new CountByNameDto("",goodsRepository.countByDeletedAtBetween(fromDate, toDate)):
-                new CountByNameDto(category,goodsRepository.countByDeletedAtBetweenAndCategory(fromDate, toDate, category));
+                new CountByNameDto(category,goodsRepository.countByDeletedAtBetweenAndCategoryName(fromDate, toDate, category));
 
     }
 

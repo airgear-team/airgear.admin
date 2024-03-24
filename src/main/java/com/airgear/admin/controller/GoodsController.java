@@ -4,6 +4,7 @@ import com.airgear.admin.dto.CountByNameDto;
 import com.airgear.admin.dto.CountDto;
 import com.airgear.admin.service.GoodsService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,10 +17,15 @@ import java.time.OffsetDateTime;
 @Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/goods")
+@RequestMapping("/admin/goods")
 public class GoodsController {
 
-    private GoodsService goodsService;
+    private final GoodsService goodsService;
+
+    @Autowired
+    public GoodsController(GoodsService goodsService) {
+        this.goodsService = goodsService;
+    }
 
     @PreAuthorize("hasAnyRole('ADMIN','MODERATOR', 'USER')")
     @GetMapping("/count")
@@ -43,7 +49,7 @@ public class GoodsController {
     @PreAuthorize("hasAnyRole('ADMIN','MODERATOR')")
     @GetMapping("/count/deleted")
     public ResponseEntity<CountByNameDto> getCountOfDeletedGoodsForCategory(
-            @RequestParam String category,
+            @RequestParam(required = false) String category,
             @RequestParam("fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime fromDate,
             @RequestParam("toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime toDate) {
         return ResponseEntity.ok(goodsService.getCountOfDeletedGoods(fromDate, toDate, category));

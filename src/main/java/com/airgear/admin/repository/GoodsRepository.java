@@ -10,8 +10,8 @@ import org.springframework.data.repository.query.Param;
 import java.time.OffsetDateTime;
 
 public interface GoodsRepository extends JpaRepository<Goods, Long> {
-    Long countByDeletedAtBetween(OffsetDateTime startDate, OffsetDateTime endDate);
-    Long countByDeletedAtBetweenAndCategory(OffsetDateTime fromDate, OffsetDateTime toDate, String categoryName);
+    Long countByDeletedAtBetween(OffsetDateTime fromDate, OffsetDateTime toDate);
+    Long countByDeletedAtBetweenAndCategoryName(OffsetDateTime fromDate, OffsetDateTime toDate, String categoryName);
     Long countByCreatedAtBetween(OffsetDateTime fromDate, OffsetDateTime toDate);
 
     @Query("SELECT category, count(goods.description) as result FROM Goods goods WHERE goods.createdAt >= :fromDate AND goods.createdAt <= :toDate group by goods.category")
