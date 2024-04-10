@@ -2,6 +2,7 @@ package com.airgear.admin.controller;
 
 import com.airgear.admin.dto.CountByNameDto;
 import com.airgear.admin.dto.CountDto;
+import com.airgear.admin.dto.UserDto;
 import com.airgear.admin.exception.BadDataException;
 import com.airgear.admin.dto.UserResponse;
 import com.airgear.admin.service.UserService;
@@ -60,6 +61,15 @@ public class UserController {
         Pageable pageable = PageRequest.of(0, limit);
 
         return userService.getUserGoodsCount(pageable);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','MODERATOR')")
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public Page<UserDto> searchUsers(@RequestParam(value = "search") String search,
+                                                     @RequestParam(required = false, defaultValue = "30") int limit) {
+
+        Pageable pageable = PageRequest.of(0, limit);
+        return  userService.searchUsers(search,pageable);
     }
 
 }
