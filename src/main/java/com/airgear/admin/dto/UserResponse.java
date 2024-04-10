@@ -1,4 +1,4 @@
-package com.airgear.admin.response;
+package com.airgear.admin.dto;
 
 import com.airgear.admin.model.User;
 
@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 public record UserResponse(Long id,
-                           String username,
                            String email,
                            String phone,
                            String name,
@@ -15,7 +14,6 @@ public record UserResponse(Long id,
 
     public static UserResponse fromUser(User user) {
         return new UserResponse(user.getId(),
-                user.getUsername(),
                 user.getEmail(),
                 user.getPhone(),
                 user.getName(),

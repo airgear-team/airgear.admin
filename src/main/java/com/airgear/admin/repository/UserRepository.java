@@ -1,6 +1,5 @@
 package com.airgear.admin.repository;
 
-import com.airgear.admin.dto.CountByNameDto;
 import com.airgear.admin.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,17 +8,20 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
-    User findByUsername(String username);
+
+    Optional<User> findByEmail(String email);
 
     Long countByCreatedAtBetween(OffsetDateTime fromDate, OffsetDateTime toDate);
+
     Long countByDeleteAtBetween(OffsetDateTime fromDate, OffsetDateTime toDate);
 
-    @Query("SELECT u.username AS username, COUNT(g) AS goodsCount " +
+    @Query("SELECT u.email AS email, COUNT(g) AS goodsCount " +
             "FROM User u JOIN u.goods g " +
-            "GROUP BY u.username")
+            "GROUP BY u.email")
     Page<Object> findUserGoodsCount(Pageable pageable);
 
 }

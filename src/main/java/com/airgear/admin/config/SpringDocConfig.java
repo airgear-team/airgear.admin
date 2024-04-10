@@ -17,6 +17,6 @@ public class SpringDocConfig {
                 .components(new Components().addSecuritySchemes("bearer-key",
                         new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
                 .addSecurityItem(new SecurityRequirement().addList("bearer-key"))
-                .info(new Info().title("Air gear API"));
+                .info(new Info().title("AirGearAdmin API"));
     }
 }

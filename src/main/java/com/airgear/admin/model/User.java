@@ -1,13 +1,12 @@
 package com.airgear.admin.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -15,6 +14,9 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"goods", "favoriteGoods", "userReviews", "complaints"})
+@ToString(exclude = {"goods", "favoriteGoods","userReviews", "complaints"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
 
     @Id
@@ -22,14 +24,11 @@ public class User {
     private Long id;
 
     @Column
-    private String username;
+    private String email;
 
     @Column
     @JsonIgnore
     private String password;
-
-    @Column
-    private String email;
 
     @Column
     private String phone;
@@ -37,22 +36,50 @@ public class User {
     @Column
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Role> roles;
+
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Goods> goods;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinTable(name = "USER_ROLES",
-            joinColumns = {
-                    @JoinColumn(name = "USER_ID")
-            },
-            inverseJoinColumns = {
-                    @JoinColumn(name = "ROLE_ID")})
-    private Set<Role> roles;
 
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 
     @Column(name = "deleted_at")
     private OffsetDateTime deleteAt;
+
+    @Column(name = "last_activity")
+    private OffsetDateTime lastActivity;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
+
+    @OneToMany(mappedBy = "reviewedUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<UserReview> userReviews;
+
+    @OneToMany(mappedBy = "user")
+    private List<Complaint> complaints;
+
+    @Column
+    private Float rating;
+
+    @Column(name = "is_potentially_scam", nullable = false)
+    @JsonIgnore
+    private boolean isPotentiallyScam = false;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_FAVORITE_GOODS",
+            joinColumns = {
+                    @JoinColumn(name = "USER_ID")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "GOODS_ID")})
+    private Set<Goods> favoriteGoods;
+
 }

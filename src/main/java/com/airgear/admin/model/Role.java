@@ -1,27 +1,17 @@
 package com.airgear.admin.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import javax.persistence.*;
+public enum Role {
 
-@Data
-@Builder
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
-public class Role {
+    USER,
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
+    MODERATOR,
 
-    @Column
-    private String name;
+    ADMIN;
 
-    @Column
-    private String description;
-
+    @JsonValue
+    public String getValue() {
+        return this.toString();
+    }
 }
