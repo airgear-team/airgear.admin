@@ -3,7 +3,7 @@ package com.airgear.admin.controller;
 import com.airgear.admin.dto.CountByNameDto;
 import com.airgear.admin.dto.CountDto;
 import com.airgear.admin.exception.BadDataException;
-import com.airgear.admin.response.UserResponse;
+import com.airgear.admin.dto.UserResponse;
 import com.airgear.admin.service.UserService;
 import com.airgear.admin.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;

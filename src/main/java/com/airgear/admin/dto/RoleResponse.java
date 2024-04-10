@@ -1,15 +1,14 @@
-package com.airgear.admin.response;
+package com.airgear.admin.dto;
 
 import com.airgear.admin.model.Role;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public record RoleResponse(Long id,
-                           String name,
-                           String description) {
+public record RoleResponse(String name) {
+
     public static RoleResponse fromRole(Role role) {
-        return new RoleResponse(role.getId(), role.getName(), role.getDescription());
+        return new RoleResponse(role.name());
     }
 
     public static Set<RoleResponse> fromRoles(Set<Role> roles) {

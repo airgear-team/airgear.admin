@@ -2,7 +2,7 @@ package com.airgear.admin.service;
 
 import com.airgear.admin.dto.CountByNameDto;
 import com.airgear.admin.dto.CountDto;
-import com.airgear.admin.response.UserResponse;
+import com.airgear.admin.dto.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
