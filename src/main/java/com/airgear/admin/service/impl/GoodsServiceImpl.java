@@ -1,7 +1,7 @@
 package com.airgear.admin.service.impl;
 
-import com.airgear.admin.dto.CountByNameDto;
-import com.airgear.admin.dto.CountDto;
+import com.airgear.admin.dto.UserCountByNameResponse;
+import com.airgear.admin.dto.UserCountResponse;
 import com.airgear.admin.model.Category;
 import com.airgear.admin.repository.GoodsRepository;
 import com.airgear.admin.service.GoodsService;
@@ -23,38 +23,38 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public CountDto getCountOfGoods() {
-        return new CountDto(goodsRepository.count());
+    public UserCountResponse getCountOfGoods() {
+        return new UserCountResponse(goodsRepository.count());
     }
 
     @Override
-    public CountDto getCountOfTopGoods() {
-        return new CountDto(goodsRepository.countTopGoods());
+    public UserCountResponse getCountOfTopGoods() {
+        return new UserCountResponse(goodsRepository.countTopGoods());
     }
 
     @Override
-    public CountDto getCountOfNewGoods(OffsetDateTime fromDate, OffsetDateTime toDate) {
-        return new CountDto(goodsRepository.countByCreatedAtBetween(fromDate, toDate));
+    public UserCountResponse getCountOfNewGoods(OffsetDateTime fromDate, OffsetDateTime toDate) {
+        return new UserCountResponse(goodsRepository.countByCreatedAtBetween(fromDate, toDate));
     }
 
     @Override
-    public CountByNameDto getCountOfDeletedGoods(OffsetDateTime fromDate, OffsetDateTime toDate, String category) {
+    public UserCountByNameResponse getCountOfDeletedGoods(OffsetDateTime fromDate, OffsetDateTime toDate, String category) {
 
         return category == null ?
-                new CountByNameDto("",goodsRepository.countByDeletedAtBetween(fromDate, toDate)):
-                new CountByNameDto(category,goodsRepository.countByDeletedAtBetweenAndCategoryName(fromDate, toDate, category));
+                new UserCountByNameResponse("",goodsRepository.countByDeletedAtBetween(fromDate, toDate)):
+                new UserCountByNameResponse(category,goodsRepository.countByDeletedAtBetweenAndCategoryName(fromDate, toDate, category));
 
     }
 
     @Override
-    public Page<CountByNameDto> getCountOfGoodsByCategory(Pageable pageable) {
+    public Page<UserCountByNameResponse> getCountOfGoodsByCategory(Pageable pageable) {
         Page<Object> page =goodsRepository.countGoodsByCategory(pageable);
-        return page == null ? null : page.map(x -> (Object[]) x).map(x -> new CountByNameDto(((Category) x[0]).getName(), (Long) x[1]));
+        return page == null ? null : page.map(x -> (Object[]) x).map(x -> new UserCountByNameResponse(((Category) x[0]).getName(), (Long) x[1]));
     }
 
     @Override
-    public Page<CountByNameDto> getCountOfNewGoodsByCategory(OffsetDateTime fromDate, OffsetDateTime toDate, Pageable pageable) {
+    public Page<UserCountByNameResponse> getCountOfNewGoodsByCategory(OffsetDateTime fromDate, OffsetDateTime toDate, Pageable pageable) {
         Page<Object> page =goodsRepository.countNewGoodsByCategory(fromDate,toDate, pageable);
-        return page == null ? null : page.map(x -> (Object[]) x).map(x -> new CountByNameDto(((Category) x[0]).getName(), (Long) x[1]));
+        return page == null ? null : page.map(x -> (Object[]) x).map(x -> new UserCountByNameResponse(((Category) x[0]).getName(), (Long) x[1]));
     }
 }

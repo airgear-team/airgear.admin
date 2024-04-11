@@ -37,14 +37,7 @@ public class User {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "role")
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Role> roles;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Goods> goods;
+    private UserStatus status;
 
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
@@ -52,11 +45,18 @@ public class User {
     @Column(name = "deleted_at")
     private OffsetDateTime deleteAt;
 
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Role> roles;
+
     @Column(name = "last_activity")
     private OffsetDateTime lastActivity;
 
-    @Enumerated(EnumType.STRING)
-    private UserStatus status;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Goods> goods;
 
     @OneToMany(mappedBy = "reviewedUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
