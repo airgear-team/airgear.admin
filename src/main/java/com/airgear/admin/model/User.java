@@ -45,14 +45,17 @@ public class User {
     @Column(name = "deleted_at")
     private OffsetDateTime deleteAt;
 
+    @Column(name = "last_activity")
+    private OffsetDateTime lastActivity;
+
+    @Column
+    private Float rating;
+
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
-
-    @Column(name = "last_activity")
-    private OffsetDateTime lastActivity;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -64,9 +67,6 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Complaint> complaints;
-
-    @Column
-    private Float rating;
 
     @Column(name = "is_potentially_scam", nullable = false)
     @JsonIgnore

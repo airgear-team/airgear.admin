@@ -8,7 +8,9 @@ import com.airgear.admin.model.User;
 import com.airgear.admin.model.UserStatus;
 import com.airgear.admin.repository.UserRepository;
 import com.airgear.admin.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,6 +28,9 @@ import java.util.Set;
 @Service
 @Transactional
 public class UserServiceImpl implements UserDetailsService, UserService {
+
+    @Value("${entity.constraint}")
+    private int constraintEntity;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -54,6 +59,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     @Transactional(readOnly = true)
     public Page<UserResponse> list(Pageable pageable) {
+        pageable = PageRequest.of(pageable.getPageNumber(), constraintEntity, pageable.getSort());
         return userRepository.findAll(pageable)
                 .map(UserResponse::fromUserWithBasicAttributes);
     }

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,7 +35,7 @@ public class UserController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PageableAsQueryParam
-    public Page<UserResponse> listUsers(@Parameter(hidden = true) Pageable pageable) {
+    public Page<UserResponse> listUsers(@Parameter(hidden = true) @PageableDefault(size = 30) Pageable pageable) {
         return userService.list(pageable);
     }
 

@@ -5,9 +5,7 @@ import com.airgear.admin.model.User;
 import com.airgear.admin.model.UserStatus;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 
 public record UserResponse(Long id,
@@ -18,6 +16,7 @@ public record UserResponse(Long id,
                            OffsetDateTime createdAt,
                            OffsetDateTime deleteAt,
                            OffsetDateTime lastActivity,
+                           Float rating,
                            Set<Role> roles) {
 
     public static UserResponse fromUser(User user) {
@@ -29,6 +28,7 @@ public record UserResponse(Long id,
                 user.getCreatedAt(),
                 user.getDeleteAt(),
                 user.getLastActivity(),
+                user.getRating(),
                 EnumSet.copyOf(user.getRoles()));
     }
 
@@ -42,12 +42,7 @@ public record UserResponse(Long id,
                 user.getCreatedAt(),
                 user.getDeleteAt(),
                 user.getLastActivity(),
+                user.getRating(),
                 null);
-    }
-
-    public static List<UserResponse> fromUsers(List<User> users) {
-        List<UserResponse> result = new ArrayList<>();
-        users.forEach(user -> result.add(UserResponse.fromUser(user)));
-        return result;
     }
 }
