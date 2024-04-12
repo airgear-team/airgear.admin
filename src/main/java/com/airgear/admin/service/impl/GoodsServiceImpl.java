@@ -1,60 +1,66 @@
 package com.airgear.admin.service.impl;
 
-import com.airgear.admin.dto.CountByNameDto;
-import com.airgear.admin.dto.CountDto;
+import com.airgear.admin.dto.UserCountByNameResponse;
+import com.airgear.admin.dto.UserCountResponse;
 import com.airgear.admin.model.Category;
 import com.airgear.admin.repository.GoodsRepository;
 import com.airgear.admin.service.GoodsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 
-@Service(value = "goodsService")
+@Service
+@Transactional
 public class GoodsServiceImpl implements GoodsService {
 
     private final GoodsRepository goodsRepository;
 
-    @Autowired
     public GoodsServiceImpl(GoodsRepository goodsRepository) {
         this.goodsRepository = goodsRepository;
     }
 
     @Override
-    public CountDto getCountOfGoods() {
-        return new CountDto(goodsRepository.count());
+    @Transactional(readOnly = true)
+    public UserCountResponse getCountOfGoods() {
+        return UserCountResponse.fromCount(goodsRepository.count());
     }
 
     @Override
-    public CountDto getCountOfTopGoods() {
-        return new CountDto(goodsRepository.countTopGoods());
+    @Transactional(readOnly = true)
+    public UserCountResponse getCountOfTopGoods() {
+        return UserCountResponse.fromCount(goodsRepository.countTopGoods());
     }
 
     @Override
-    public CountDto getCountOfNewGoods(OffsetDateTime fromDate, OffsetDateTime toDate) {
-        return new CountDto(goodsRepository.countByCreatedAtBetween(fromDate, toDate));
+    @Transactional(readOnly = true)
+    public UserCountResponse getCountOfNewGoods(OffsetDateTime fromDate, OffsetDateTime toDate) {
+        return UserCountResponse.fromCount(goodsRepository.countByCreatedAtBetween(fromDate, toDate));
     }
 
     @Override
-    public CountByNameDto getCountOfDeletedGoods(OffsetDateTime fromDate, OffsetDateTime toDate, String category) {
+    @Transactional(readOnly = true)
+    public UserCountByNameResponse getCountOfDeletedGoods(OffsetDateTime fromDate, OffsetDateTime toDate, String category) {
 
         return category == null ?
-                new CountByNameDto("",goodsRepository.countByDeletedAtBetween(fromDate, toDate)):
-                new CountByNameDto(category,goodsRepository.countByDeletedAtBetweenAndCategoryName(fromDate, toDate, category));
+                new UserCountByNameResponse("", goodsRepository.countByDeletedAtBetween(fromDate, toDate)) :
+                new UserCountByNameResponse(category, goodsRepository.countByDeletedAtBetweenAndCategoryName(fromDate, toDate, category));
 
     }
 
     @Override
-    public Page<CountByNameDto> getCountOfGoodsByCategory(Pageable pageable) {
-        Page<Object> page =goodsRepository.countGoodsByCategory(pageable);
-        return page == null ? null : page.map(x -> (Object[]) x).map(x -> new CountByNameDto(((Category) x[0]).getName(), (Long) x[1]));
+    @Transactional(readOnly = true)
+    public Page<UserCountByNameResponse> getCountOfGoodsByCategory(Pageable pageable) {
+        Page<Object> page = goodsRepository.countGoodsByCategory(pageable);
+        return page == null ? null : page.map(x -> (Object[]) x).map(x -> new UserCountByNameResponse(((Category) x[0]).getName(), (Long) x[1]));
     }
 
     @Override
-    public Page<CountByNameDto> getCountOfNewGoodsByCategory(OffsetDateTime fromDate, OffsetDateTime toDate, Pageable pageable) {
-        Page<Object> page =goodsRepository.countNewGoodsByCategory(fromDate,toDate, pageable);
-        return page == null ? null : page.map(x -> (Object[]) x).map(x -> new CountByNameDto(((Category) x[0]).getName(), (Long) x[1]));
+    @Transactional(readOnly = true)
+    public Page<UserCountByNameResponse> getCountOfNewGoodsByCategory(OffsetDateTime fromDate, OffsetDateTime toDate, Pageable pageable) {
+        Page<Object> page = goodsRepository.countNewGoodsByCategory(fromDate, toDate, pageable);
+        return page == null ? null : page.map(x -> (Object[]) x).map(x -> new UserCountByNameResponse(((Category) x[0]).getName(), (Long) x[1]));
     }
 }

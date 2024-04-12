@@ -1,6 +1,7 @@
 package com.airgear.admin.config.security.filters;
 
 import com.airgear.admin.config.security.SecurityConstants;
+import com.airgear.admin.config.security.properties.AirGearJWTProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.slf4j.Logger;
@@ -26,14 +27,12 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     private static final Logger log = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
-    private final String secret;
-    private final String authoritiesKey;
+    private final AirGearJWTProperties jwtProperties;
 
     public JWTAuthorizationFilter(AuthenticationManager authenticationManager,
-                                  String secret, String authoritiesKey) {
+                                  AirGearJWTProperties jwtProperties) {
         super(authenticationManager);
-        this.secret = secret;
-        this.authoritiesKey = authoritiesKey;
+        this.jwtProperties = jwtProperties;
     }
 
     @Override
@@ -69,7 +68,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         Claims claims;
         try {
             claims = Jwts.parser()
-                    .setSigningKey(secret)
+                    .setSigningKey(jwtProperties.getSecret())
                     .parseClaimsJws(encodedJwt)
                     .getBody();
         } catch (Exception e) {
@@ -80,7 +79,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         String username = claims.getSubject();
 
         Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(authoritiesKey).toString().split(","))
+                Arrays.stream(claims.get(jwtProperties.getKey()).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
