@@ -1,13 +1,11 @@
 package com.airgear.admin.specifications;
 
+import com.airgear.admin.model.Goods;
 import com.airgear.admin.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 
 @AllArgsConstructor
 public class UserSpecification implements Specification<User> {
@@ -16,6 +14,21 @@ public class UserSpecification implements Specification<User> {
     @Override
     public Predicate toPredicate(
             Root<User> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+
+        Subquery<Long> countSubQuery = query.subquery(Long.class);
+        Root<User> userRoot2 = countSubQuery.correlate(root);
+        Join<User, Goods> goods = userRoot2.join("goods", JoinType.LEFT);
+        countSubQuery.select(builder.count(goods));
+
+        if(criteria.getKey().equals("countGoods")){
+            return switch (criteria.getOperation()) {
+                case EQUALITY -> builder.equal(countSubQuery, criteria.getValue());
+                case NEGATION -> builder.notEqual(countSubQuery, criteria.getValue());
+                case GREATER_THAN -> builder.greaterThan(countSubQuery, Long.valueOf((String) criteria.getValue()));
+                case LESS_THAN -> builder.lessThan(countSubQuery, Long.valueOf((String) criteria.getValue()));
+                case LIKE, STARTS_WITH,ENDS_WITH,CONTAINS ->null;
+            };
+        }
 
         return switch (criteria.getOperation()) {
             case EQUALITY -> builder.equal(root.get(criteria.getKey()), criteria.getValue());

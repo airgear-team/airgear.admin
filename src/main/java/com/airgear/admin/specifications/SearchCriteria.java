@@ -10,6 +10,9 @@ public class SearchCriteria {
     private boolean orPredicate;
 
     public SearchCriteria(String key, SearchOperation op, Object value) {
+        this.key = key;
+        this.operation = op;
+        this.value = value;
     }
 
     public boolean isOrPredicate() {

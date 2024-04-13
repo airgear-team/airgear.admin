@@ -64,7 +64,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MODERATOR')")
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/find", method = RequestMethod.GET)
     public Page<UserDto> searchUsers(@RequestParam(value = "search") String search,
                                                      @RequestParam(required = false, defaultValue = "30") int limit) {
 

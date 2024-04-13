@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         UserSpecificationsBuilder builder = new UserSpecificationsBuilder();
         String operationSetExp = String.join("|", SearchOperation.SIMPLE_OPERATION_SET);
         Pattern pattern = Pattern.compile(
-                "(\\w+?)(" + operationSetExp + "\\p{Punct}?)(\\w+?)(\\p{Punct}?),");
+                "(\\w+?)(" + operationSetExp + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?),");
         Matcher matcher = pattern.matcher(search + ",");
         while (matcher.find()) {
             builder.with(

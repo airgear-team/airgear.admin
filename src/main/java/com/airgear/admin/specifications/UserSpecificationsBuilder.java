@@ -3,10 +3,15 @@ package com.airgear.admin.specifications;
 import com.airgear.admin.model.User;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserSpecificationsBuilder {
     private List<SearchCriteria> params;
+
+    public UserSpecificationsBuilder() {
+        params = new ArrayList<>();
+    }
 
     public UserSpecificationsBuilder with(
             String key, String operation, Object value, String prefix, String suffix) {
