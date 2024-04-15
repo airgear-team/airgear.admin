@@ -2,7 +2,7 @@ package com.airgear.admin.service;
 
 import com.airgear.admin.dto.CountByNameDto;
 import com.airgear.admin.dto.CountDto;
-import com.airgear.admin.dto.UserDto;
+import com.airgear.admin.dto.UserSearchResponse;
 import com.airgear.admin.dto.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +16,6 @@ public interface UserService {
     CountDto getCountOfNewUsers(OffsetDateTime fromDate, OffsetDateTime toDate);
     CountDto getCountOfDeletedUsers(OffsetDateTime fromDate, OffsetDateTime toDate);
     Page<CountByNameDto> getUserGoodsCount(Pageable pageable);
-    Page<UserDto> searchUsers(String search, Pageable pageable);
+    Page<UserSearchResponse> searchUsers(String search, Pageable pageable);
 
 }

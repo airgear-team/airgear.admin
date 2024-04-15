@@ -2,7 +2,7 @@ package com.airgear.admin.service.impl;
 
 import com.airgear.admin.dto.CountByNameDto;
 import com.airgear.admin.dto.CountDto;
-import com.airgear.admin.dto.UserDto;
+import com.airgear.admin.dto.UserSearchResponse;
 import com.airgear.admin.model.CustomUserDetailsService;
 import com.airgear.admin.model.User;
 import com.airgear.admin.repository.UserRepository;
@@ -69,22 +69,28 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public Page<UserDto> searchUsers(String search, Pageable pageable) {
+    public Page<UserSearchResponse> searchUsers(String search, Pageable pageable) {
         UserSpecificationsBuilder builder = new UserSpecificationsBuilder();
         String operationSetExp = String.join("|", SearchOperation.SIMPLE_OPERATION_SET);
         Pattern pattern = Pattern.compile(
                 "(\\w+?)(" + operationSetExp + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?),");
         Matcher matcher = pattern.matcher(search + ",");
         while (matcher.find()) {
-            builder.with(
-                    matcher.group(1),
-                    matcher.group(2),
-                    matcher.group(4),
-                    matcher.group(3),
-                    matcher.group(5));
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(4), matcher.group(3), matcher.group(5));
         }
-
         Specification<User> spec = builder.build();
-        return userRepository.findAll(spec, pageable).map(UserDto::fromUser);
+        List<CountByNameDto> goodsCount = getUserGoodsCount(Pageable.unpaged()).stream().toList();
+        return userRepository.findAll(spec, pageable).map(user ->new UserSearchResponse(user.getId(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getName(),
+                user.getRoles(),
+                goodsCount.stream().filter(x->x.name().equals(user.getEmail())).findFirst().get().count(),
+                user.getCreatedAt(),
+                user.getDeleteAt(),
+                user.getLastActivity(),
+                user.getStatus(),
+                user.getRating()
+        ));
     }
 }
