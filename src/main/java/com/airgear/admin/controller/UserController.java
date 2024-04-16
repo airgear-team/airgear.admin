@@ -181,7 +181,6 @@ public class UserController {
     @RequestMapping(value = "/find", method = RequestMethod.GET)
     public Page<UserSearchResponse> searchUsers(@RequestParam(value = "search") String search,
                                                 @PageableDefault(size = 30) Pageable pageable) {
-
         return  userService.searchUsers(search,pageable);
     }
 }

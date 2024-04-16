@@ -71,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .antMatchers(getPermitAllUrls()).permitAll()
-                .antMatchers(HttpMethod.GET, Routes.USERS_ADMINS).hasAnyRole(Role.ADMIN.getValue(), Role.MODERATOR.getValue())
+                .antMatchers(HttpMethod.GET, Routes.USERS_ADMINS, Routes.USERS_ADMINS + "/find").hasAnyRole(Role.ADMIN.getValue(), Role.MODERATOR.getValue())
                 .antMatchers(Routes.USERS_ADMINS + "/me/**").hasRole(Role.ADMIN.getValue())
                 .antMatchers(HttpMethod.GET, Routes.USERS_ADMINS + "/count/**").hasRole(Role.ADMIN.getValue())
                 .antMatchers(Routes.USERS_ADMINS + "/{id:\\d+}/**").hasRole(Role.ADMIN.getValue())
