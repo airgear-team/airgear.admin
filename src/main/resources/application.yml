@@ -21,6 +21,8 @@ server:
     include-message: always
     include-binding-errors: always
   port: 8082
+  servlet:
+    context-path: /admin
 
 springdoc:
   show-actuator: true

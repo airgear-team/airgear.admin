@@ -18,11 +18,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
 
+import static com.airgear.admin.utils.Routes.USERS;
 import static com.airgear.admin.utils.Routes.USERS_ADMINS;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping(USERS_ADMINS)
+@RequestMapping(USERS)
 public class UserController {
 
     private final UserService userService;

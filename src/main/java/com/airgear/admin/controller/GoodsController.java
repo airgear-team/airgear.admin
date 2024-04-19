@@ -14,7 +14,7 @@ import java.time.OffsetDateTime;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping(Routes.GOODS_ADMINS)
+@RequestMapping(Routes.GOODS)
 public class GoodsController {
 
     private final GoodsService goodsService;
@@ -77,4 +77,5 @@ public class GoodsController {
             Pageable pageable) {
         return goodsService.getCountOfNewGoodsByCategory(fromDate, toDate, pageable);
     }
+
 }
