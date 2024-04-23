@@ -19,7 +19,6 @@ import javax.validation.Valid;
 import java.time.OffsetDateTime;
 
 import static com.airgear.admin.utils.Routes.USERS;
-import static com.airgear.admin.utils.Routes.USERS_ADMINS;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -38,6 +37,12 @@ public class UserController {
     @PageableAsQueryParam
     public Page<UserResponse> listUsers(@Parameter(hidden = true) @PageableDefault(size = 30) Pageable pageable) {
         return userService.list(pageable);
+    }
+
+    @RequestMapping(value = "/find", method = RequestMethod.GET)
+    public Page<UserSearchResponse> searchUsers(@RequestParam(value = "search") String search,
+                                                @PageableDefault(size = 30) Pageable pageable) {
+        return  userService.searchUsers(search,pageable);
     }
 
     //endregion
@@ -179,9 +184,5 @@ public class UserController {
         userService.deleteById(id);
     }
 
-    @RequestMapping(value = "/find", method = RequestMethod.GET)
-    public Page<UserSearchResponse> searchUsers(@RequestParam(value = "search") String search,
-                                                @PageableDefault(size = 30) Pageable pageable) {
-        return  userService.searchUsers(search,pageable);
-    }
+    //endregion
 }
