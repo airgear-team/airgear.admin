@@ -1,8 +1,8 @@
 package com.airgear.admin.dto;
 
-import com.airgear.admin.model.Role;
-import com.airgear.admin.model.User;
-import com.airgear.admin.model.UserStatus;
+import com.airgear.model.Role;
+import com.airgear.model.User;
+import com.airgear.model.UserStatus;
 
 import java.time.OffsetDateTime;
 import java.util.EnumSet;

@@ -23,6 +23,13 @@
         <springdoc-openapi.version>1.6.15</springdoc-openapi.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -112,6 +119,12 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.bithub7</groupId>
+            <artifactId>airgear.model</artifactId>
+            <version>v1.1.10</version>
         </dependency>
 
     </dependencies>

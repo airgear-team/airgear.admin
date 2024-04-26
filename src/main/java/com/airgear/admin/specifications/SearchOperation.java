@@ -6,19 +6,13 @@ public enum SearchOperation {
     public static final String[] SIMPLE_OPERATION_SET = { ":", "!", ">", "<", "~" };
 
     public static SearchOperation getSimpleOperation(char input) {
-        switch (input) {
-            case ':':
-                return EQUALITY;
-            case '!':
-                return NEGATION;
-            case '>':
-                return GREATER_THAN;
-            case '<':
-                return LESS_THAN;
-            case '~':
-                return LIKE;
-            default:
-                return null;
-        }
+        return switch (input) {
+            case ':' -> EQUALITY;
+            case '!' -> NEGATION;
+            case '>' -> GREATER_THAN;
+            case '<' -> LESS_THAN;
+            case '~' -> LIKE;
+            default -> null;
+        };
     }
 }

@@ -1,6 +1,6 @@
 package com.airgear.admin.dto;
 
-import com.airgear.admin.model.UserStatus;
+import com.airgear.model.UserStatus;
 
 import javax.validation.constraints.NotNull;
 

@@ -1,7 +1,7 @@
 package com.airgear.admin.specifications;
 
-import com.airgear.admin.model.Goods;
-import com.airgear.admin.model.User;
+import com.airgear.model.Goods;
+import com.airgear.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -50,5 +50,4 @@ public class UserSpecification implements Specification<User> {
             case LIKE, STARTS_WITH,ENDS_WITH,CONTAINS ->null;
         };
     }
-
 }

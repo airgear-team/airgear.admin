@@ -2,9 +2,9 @@ package com.airgear.admin.service.impl;
 
 import com.airgear.admin.dto.UserCountByNameResponse;
 import com.airgear.admin.dto.UserCountResponse;
-import com.airgear.admin.model.Category;
 import com.airgear.admin.repository.GoodsRepository;
 import com.airgear.admin.service.GoodsService;
+import com.airgear.model.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

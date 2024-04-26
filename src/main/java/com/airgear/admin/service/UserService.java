@@ -1,8 +1,8 @@
 package com.airgear.admin.service;
 
 import com.airgear.admin.dto.*;
-import com.airgear.admin.model.Role;
-import com.airgear.admin.model.UserStatus;
+import com.airgear.model.Role;
+import com.airgear.model.UserStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -44,4 +44,5 @@ public interface UserService {
     void deleteByEmail(String email);
 
     Page<UserSearchResponse> searchUsers(String search, Pageable pageable);
+
 }

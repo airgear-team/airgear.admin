@@ -2,8 +2,8 @@ package com.airgear.admin.controller;
 
 import com.airgear.admin.dto.*;
 import com.airgear.admin.exception.UserExceptions;
-import com.airgear.admin.model.Role;
 import com.airgear.admin.service.UserService;
+import com.airgear.model.Role;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;

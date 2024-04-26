@@ -2,12 +2,12 @@ package com.airgear.admin.service.impl;
 
 import com.airgear.admin.dto.*;
 import com.airgear.admin.exception.UserExceptions;
-import com.airgear.admin.model.CustomUserDetailsService;
-import com.airgear.admin.model.Role;
-import com.airgear.admin.model.User;
-import com.airgear.admin.model.UserStatus;
 import com.airgear.admin.repository.UserRepository;
 import com.airgear.admin.service.UserService;
+import com.airgear.model.CustomUserDetails;
+import com.airgear.model.Role;
+import com.airgear.model.User;
+import com.airgear.model.UserStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User with email '" + email + "' not found"));
 
-        return new CustomUserDetailsService(user);
+        return new CustomUserDetails(user);
     }
 
     @Override

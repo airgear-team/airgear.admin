@@ -1,13 +1,13 @@
 package com.airgear.admin.specifications;
 
-import com.airgear.admin.model.User;
+import com.airgear.model.User;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserSpecificationsBuilder {
-    private List<SearchCriteria> params;
+    private final List<SearchCriteria> params;
 
     public UserSpecificationsBuilder() {
         params = new ArrayList<>();
