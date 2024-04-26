@@ -20,8 +20,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     boolean existsByPhone(String phone);
 
-    void deleteByEmail(String email);
-
     Long countByCreatedAtBetween(OffsetDateTime fromDate, OffsetDateTime toDate);
 
     Long countByDeleteAtBetween(OffsetDateTime fromDate, OffsetDateTime toDate);
@@ -30,4 +28,5 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             "FROM User u JOIN u.goods g " +
             "GROUP BY u.email")
     Page<Object> findUserGoodsCount(Pageable pageable);
+
 }

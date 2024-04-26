@@ -4,6 +4,8 @@ import com.airgear.admin.dto.*;
 import com.airgear.admin.exception.UserExceptions;
 import com.airgear.admin.repository.UserRepository;
 import com.airgear.admin.service.UserService;
+import com.airgear.admin.specifications.SearchOperation;
+import com.airgear.admin.specifications.UserSpecificationsBuilder;
 import com.airgear.model.CustomUserDetails;
 import com.airgear.model.Role;
 import com.airgear.model.User;
@@ -19,8 +21,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.airgear.admin.specifications.SearchOperation;
-import com.airgear.admin.specifications.UserSpecificationsBuilder;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
@@ -78,12 +78,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<UserResponse> findByEmail(String email) {
-        return userRepository.findByEmail(email).map(UserResponse::fromUser);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public UserCountResponse getCountOfNewUsers(OffsetDateTime fromDate, OffsetDateTime toDate) {
         return UserCountResponse.fromCount(userRepository.countByCreatedAtBetween(fromDate, toDate));
     }
@@ -108,12 +102,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public UserResponse mergeByEmail(String email, UserMergeRequest request) {
-        User user = getUser(email);
-        return UserResponse.fromUser(merge(user, request));
-    }
-
-    @Override
     public UserResponse changeStatusById(long id, UserStatus status) {
         User user = getUser(id);
         if (user.getStatus() != status) {
@@ -126,13 +114,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public UserResponse changePasswordById(long id, UserOverridePasswordRequest request) {
         User user = getUser(id);
         user.setPassword(passwordEncoder.encode(request.password()));
-        return UserResponse.fromUser(user);
-    }
-
-    @Override
-    public UserResponse changePasswordByEmail(String email, UserChangePasswordRequest request) {
-        User user = getUser(email);
-        changePassword(user, request.oldPassword(), request.newPassword());
         return UserResponse.fromUser(user);
     }
 
@@ -156,12 +137,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public void deleteById(long id) {
         if (!userRepository.existsById(id)) throw UserExceptions.userNotFound(id);
         userRepository.deleteById(id);
-    }
-
-    @Override
-    public void deleteByEmail(String email) {
-        if (!userRepository.existsByEmail(email)) throw UserExceptions.userNotFound(email);
-        userRepository.deleteByEmail(email);
     }
 
     public void mergeAdmins(List<UserSaveRequest> requests) {
@@ -218,11 +193,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .orElseThrow(() -> UserExceptions.userNotFound(id));
     }
 
-    private User getUser(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> UserExceptions.userNotFound(email));
-    }
-
     private User merge(User user, UserMergeRequest request) {
         String email = request.email();
         if (email != null && !email.equals(user.getEmail())) {
@@ -241,13 +211,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return user;
     }
 
-    private void changePassword(User user, String oldPassword, String newPassword) {
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            throw UserExceptions.wrongPassword();
-        }
-        user.setPassword(passwordEncoder.encode(newPassword));
-    }
-
     @Override
     public Page<UserSearchResponse> searchUsers(String search, Pageable pageable) {
         pageable = PageRequest.of(pageable.getPageNumber(), constraintEntity, pageable.getSort());
@@ -261,12 +224,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
         Specification<User> spec = builder.build();
         List<UserCountByNameResponse> goodsCount = getCountOfUserGoods(Pageable.unpaged()).stream().toList();
-        return userRepository.findAll(spec, pageable).map(user ->new UserSearchResponse(user.getId(),
+        return userRepository.findAll(spec, pageable).map(user -> new UserSearchResponse(user.getId(),
                 user.getEmail(),
                 user.getPhone(),
                 user.getName(),
                 user.getRoles(),
-                goodsCount.stream().filter(x->x.name().equals(user.getEmail())).findFirst().get().count(),
+                goodsCount.stream().filter(x -> x.name().equals(user.getEmail())).findFirst().get().count(),
                 user.getCreatedAt(),
                 user.getDeleteAt(),
                 user.getLastActivity(),

@@ -17,8 +17,6 @@ public interface UserService {
 
     Optional<UserResponse> findById(long id);
 
-    Optional<UserResponse> findByEmail(String email);
-
     UserCountResponse getCountOfNewUsers(OffsetDateTime fromDate, OffsetDateTime toDate);
 
     UserCountResponse getCountOfDeletedUsers(OffsetDateTime fromDate, OffsetDateTime toDate);
@@ -27,21 +25,15 @@ public interface UserService {
 
     UserResponse mergeById(long id, UserMergeRequest request);
 
-    UserResponse mergeByEmail(String email, UserMergeRequest request);
-
     UserResponse changeStatusById(long id, UserStatus status);
 
     UserResponse changePasswordById(long id, UserOverridePasswordRequest request);
-
-    UserResponse changePasswordByEmail(String email, UserChangePasswordRequest request);
 
     UserResponse appointRole(long ide, Role role);
 
     UserResponse cancelRole(long id, Role role);
 
     void deleteById(long id);
-
-    void deleteByEmail(String email);
 
     Page<UserSearchResponse> searchUsers(String search, Pageable pageable);
 

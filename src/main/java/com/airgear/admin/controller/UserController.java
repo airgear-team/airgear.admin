@@ -12,7 +12,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,41 +47,6 @@ public class UserController {
     //endregion
 
     //region admin-only API
-
-    @GetMapping(
-            value = "/me",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public UserResponse getCurrentUser(@AuthenticationPrincipal String email) {
-        return userService.findByEmail(email)
-                .orElseThrow(() -> UserExceptions.userNotFound(email));
-    }
-
-    @PatchMapping(
-            value = "/me",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public UserResponse mergeCurrentUser(@AuthenticationPrincipal String email,
-                                         @RequestBody @Valid UserMergeRequest request) {
-        return userService.mergeByEmail(email, request);
-    }
-
-    @PatchMapping(
-            value = "/me/password",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public UserResponse changeCurrentUserPassword(@AuthenticationPrincipal String email,
-                                                  @RequestBody @Valid UserChangePasswordRequest request) {
-        return userService.changePasswordByEmail(email, request);
-    }
-
-    @DeleteMapping("/me")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCurrentUser(@AuthenticationPrincipal String email) {
-        userService.deleteByEmail(email);
-    }
 
     @GetMapping(
             value = "/count/new",
