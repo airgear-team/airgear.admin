@@ -1,13 +1,16 @@
 package com.airgear.admin.controller;
 
+import com.airgear.admin.dto.GoodsDto;
 import com.airgear.admin.dto.UserCountByNameResponse;
 import com.airgear.admin.dto.UserCountResponse;
 import com.airgear.admin.service.GoodsService;
 import com.airgear.admin.utils.Routes;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.OffsetDateTime;
@@ -78,4 +81,13 @@ public class GoodsController {
         return goodsService.getCountOfNewGoodsByCategory(fromDate, toDate, pageable);
     }
 
+    @GetMapping
+    public ResponseEntity<Page<GoodsDto>> getGoods(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "30") int size
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<GoodsDto> goods = goodsService.getGoods(pageRequest);
+        return ResponseEntity.ok(goods);
+    }
 }

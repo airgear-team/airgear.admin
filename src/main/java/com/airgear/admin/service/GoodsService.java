@@ -1,5 +1,6 @@
 package com.airgear.admin.service;
 
+import com.airgear.admin.dto.GoodsDto;
 import com.airgear.admin.dto.UserCountByNameResponse;
 import com.airgear.admin.dto.UserCountResponse;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import java.time.OffsetDateTime;
 
 public interface GoodsService {
+
+    Page<GoodsDto> getGoods(Pageable pageable);
 
     UserCountResponse getCountOfGoods();
 

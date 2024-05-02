@@ -1,5 +1,6 @@
 package com.airgear.admin.service.impl;
 
+import com.airgear.admin.dto.GoodsDto;
 import com.airgear.admin.dto.UserCountByNameResponse;
 import com.airgear.admin.dto.UserCountResponse;
 import com.airgear.admin.repository.GoodsRepository;
@@ -20,6 +21,11 @@ public class GoodsServiceImpl implements GoodsService {
 
     public GoodsServiceImpl(GoodsRepository goodsRepository) {
         this.goodsRepository = goodsRepository;
+    }
+
+    @Override
+    public Page<GoodsDto> getGoods(Pageable pageable) {
+        return goodsRepository.findAllGoods(pageable);
     }
 
     @Override
