@@ -23,7 +23,7 @@ public class GoodsController {
         this.goodsService = goodsService;
     }
 
-    @GetMapping(
+    @GetMapping(value = "/count",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public UserCountResponse getCountOfGoods() {
@@ -31,7 +31,7 @@ public class GoodsController {
     }
 
     @GetMapping(
-            value = "/top",
+            value = "/count/top",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public UserCountResponse getCountOfTopGoods() {
@@ -39,7 +39,7 @@ public class GoodsController {
     }
 
     @GetMapping(
-            value = "/new",
+            value = "/count/new",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public UserCountResponse getCountOfNewGoods(
@@ -49,7 +49,7 @@ public class GoodsController {
     }
 
     @GetMapping(
-            value = "/deleted",
+            value = "/count/deleted",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public UserCountByNameResponse getCountOfDeletedGoodsForCategory(
@@ -60,7 +60,7 @@ public class GoodsController {
     }
 
     @GetMapping(
-            value = "/category",
+            value = "/count/category",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public Page<UserCountByNameResponse> getCountOfGoodsByCategory(Pageable pageable) {
@@ -68,7 +68,7 @@ public class GoodsController {
     }
 
     @GetMapping(
-            value = "/category/new",
+            value = "/count/category/new",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public Page<UserCountByNameResponse> getCountOfNewGoodsByCategory(
