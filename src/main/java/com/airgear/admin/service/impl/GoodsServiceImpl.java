@@ -1,25 +1,39 @@
 package com.airgear.admin.service.impl;
 
+import com.airgear.admin.dto.GoodsDto;
 import com.airgear.admin.dto.UserCountByNameResponse;
 import com.airgear.admin.dto.UserCountResponse;
+import com.airgear.admin.mapper.GoodsMapper;
 import com.airgear.admin.repository.GoodsRepository;
 import com.airgear.admin.service.GoodsService;
 import com.airgear.model.Category;
+import com.airgear.model.Goods;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 @Service
 @Transactional
 public class GoodsServiceImpl implements GoodsService {
+    @Autowired
+    private GoodsMapper goodsMapper;
 
     private final GoodsRepository goodsRepository;
 
     public GoodsServiceImpl(GoodsRepository goodsRepository) {
         this.goodsRepository = goodsRepository;
+    }
+
+    @Override
+    public Page<GoodsDto> getGoods(Specification<Goods> spec, Pageable pageable) {
+        return goodsRepository.findAll(spec, pageable).map(goodsMapper::goodsToGoodsDto);
     }
 
     @Override
