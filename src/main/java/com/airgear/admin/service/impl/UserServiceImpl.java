@@ -4,8 +4,6 @@ import com.airgear.admin.dto.*;
 import com.airgear.admin.exception.UserExceptions;
 import com.airgear.admin.repository.UserRepository;
 import com.airgear.admin.service.UserService;
-import com.airgear.admin.specifications.SearchOperation;
-import com.airgear.admin.specifications.UserSpecificationsBuilder;
 import com.airgear.model.CustomUserDetails;
 import com.airgear.model.Role;
 import com.airgear.model.User;
@@ -27,8 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -67,6 +63,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         pageable = PageRequest.of(pageable.getPageNumber(), constraintEntity, pageable.getSort());
         return userRepository.findAll(pageable)
                 .map(UserResponse::fromUserWithBasicAttributes);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<UserSearchResponse> findUsers(String name, String email, String phone, UserStatus status,
+                                              OffsetDateTime createdAt, OffsetDateTime deletedAt, Pageable pageable) {
+        pageable = PageRequest.of(pageable.getPageNumber(), constraintEntity, pageable.getSort());
+        Specification<User> spec = createSpecification(name, email, phone, status, createdAt, deletedAt);
+        return userRepository.findAll(spec, pageable)
+                .map(UserSearchResponse::fromUser);
     }
 
     @Override
@@ -211,30 +217,46 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return user;
     }
 
-    @Override
-    public Page<UserSearchResponse> searchUsers(String search, Pageable pageable) {
-        pageable = PageRequest.of(pageable.getPageNumber(), constraintEntity, pageable.getSort());
-        UserSpecificationsBuilder builder = new UserSpecificationsBuilder();
-        String operationSetExp = String.join("|", SearchOperation.SIMPLE_OPERATION_SET);
-        Pattern pattern = Pattern.compile(
-                "(\\w+?)(" + operationSetExp + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?),");
-        Matcher matcher = pattern.matcher(search + ",");
-        while (matcher.find()) {
-            builder.with(matcher.group(1), matcher.group(2), matcher.group(4), matcher.group(3), matcher.group(5));
-        }
-        Specification<User> spec = builder.build();
-        List<UserCountByNameResponse> goodsCount = getCountOfUserGoods(Pageable.unpaged()).stream().toList();
-        return userRepository.findAll(spec, pageable).map(user -> new UserSearchResponse(user.getId(),
-                user.getEmail(),
-                user.getPhone(),
-                user.getName(),
-                user.getRoles(),
-                goodsCount.stream().filter(x -> x.name().equals(user.getEmail())).findFirst().get().count(),
-                user.getCreatedAt(),
-                user.getDeleteAt(),
-                user.getLastActivity(),
-                user.getStatus(),
-                user.getRating()
-        ));
+    private Specification<User> createSpecification(String name, String email, String phone, UserStatus status,
+                                                    OffsetDateTime createdAt, OffsetDateTime deletedAt) {
+        return Specification
+                .where(nameLike(name))
+                .and(emailLike(email))
+                .and(phoneLike(phone))
+                .and(statusLike(status))
+                .and(createdAtLike(createdAt))
+                .and(deletedAtLike(deletedAt));
+    }
+
+    private Specification<User> nameLike(String name) {
+        return (root, query, criteriaBuilder) ->
+                name == null ? criteriaBuilder.conjunction() : criteriaBuilder.like(root.get("name"), "%" + name + "%");
+    }
+
+    private Specification<User> emailLike(String email) {
+        return (root, query, criteriaBuilder) ->
+                email == null ? criteriaBuilder.conjunction() : criteriaBuilder.like(root.get("email"), "%" + email + "%");
+    }
+
+    private Specification<User> phoneLike(String phone) {
+        return (root, query, criteriaBuilder) ->
+                phone == null ? criteriaBuilder.conjunction() : criteriaBuilder.like(root.get("phone"), "%" + phone + "%");
+    }
+
+    private Specification<User> statusLike(UserStatus status) {
+        return (root, query, criteriaBuilder) ->
+                status == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("status"), status);
+    }
+
+    private Specification<User> createdAtLike(OffsetDateTime createdAt) {
+        return (root, query, criteriaBuilder) ->
+                createdAt == null ? criteriaBuilder.conjunction()
+                        : criteriaBuilder.lessThanOrEqualTo(root.get("createdAt"), createdAt);
+    }
+
+    private Specification<User> deletedAtLike(OffsetDateTime deletedAt) {
+        return (root, query, criteriaBuilder) ->
+                deletedAt == null ? criteriaBuilder.conjunction()
+                        : criteriaBuilder.greaterThanOrEqualTo(root.get("deletedAt"), deletedAt);
     }
 }

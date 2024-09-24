@@ -15,6 +15,9 @@ public interface UserService {
 
     Page<UserResponse> list(Pageable pageable);
 
+    Page<UserSearchResponse> findUsers(String name, String email, String phone, UserStatus status,
+                                       OffsetDateTime createdAt, OffsetDateTime deletedAt, Pageable pageable);
+
     Optional<UserResponse> findById(long id);
 
     UserCountResponse getCountOfNewUsers(OffsetDateTime fromDate, OffsetDateTime toDate);
@@ -34,7 +37,5 @@ public interface UserService {
     UserResponse cancelRole(long id, Role role);
 
     void deleteById(long id);
-
-    Page<UserSearchResponse> searchUsers(String search, Pageable pageable);
 
 }
