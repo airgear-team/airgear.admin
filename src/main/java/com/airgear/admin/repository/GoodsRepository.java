@@ -4,12 +4,13 @@ import com.airgear.model.Goods;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.OffsetDateTime;
 
-public interface GoodsRepository extends JpaRepository<Goods, Long> {
+public interface GoodsRepository extends JpaRepository<Goods, Long>, JpaSpecificationExecutor<Goods> {
 
     @Query("SELECT COUNT(t) FROM TopGoodsPlacement t WHERE t.startAt <= CURRENT_TIMESTAMP AND t.endAt >= CURRENT_TIMESTAMP")
     Long countTopGoods();
